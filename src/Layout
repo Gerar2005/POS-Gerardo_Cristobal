@@ -1,0 +1,52 @@
+//Define el estilo y tamaños de etiquetas.
+
+package cafe;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
+public class LayoutBase extends JFrame {
+    protected JPanel contenido;
+    public LayoutBase(String titulo) {
+        setTitle(titulo);
+        setSize(1180,700);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
+        add(menu(), BorderLayout.WEST);
+        contenido = new JPanel(new BorderLayout(15,15));
+        contenido.setBackground(Estilos.CREMA);
+        contenido.setBorder(new EmptyBorder(25,25,25,25));
+        add(contenido, BorderLayout.CENTER);
+    }
+    private JPanel menu() {
+        JPanel m = new JPanel(new GridLayout(10,1));
+        m.setPreferredSize(new Dimension(190,700));
+        m.setBackground(Estilos.CAFE);
+        JLabel logo = new JLabel("🌻 SUNFLOWER", SwingConstants.CENTER);
+        logo.setForeground(Color.WHITE);
+        logo.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        m.add(logo);
+        item(m,"Inicio", () -> abrir(new MenuPrincipalFrame()));
+        item(m,"Clientes", () -> abrir(new ClientesFrame()));
+        item(m,"Productos", () -> abrir(new ProductosFrame()));
+        item(m,"Materia Prima", () -> abrir(new MateriaPrimaFrame()));
+        item(m,"Pedidos", () -> abrir(new PedidosFrame()));
+        item(m,"Reabastecimiento", () -> abrir(new ReabastecimientoFrame()));
+        item(m,"Reportes", () -> abrir(new ReportesFrame()));
+        item(m,"Configuración", () -> JOptionPane.showMessageDialog(this,"Configuración pendiente."));
+        item(m,"Salir", () -> abrir(new LoginFrame()));
+        return m;
+    }
+    private void item(JPanel m, String texto, Runnable accion) {
+        JButton b = new JButton(texto);
+        b.setBackground(Estilos.CAFE);
+        b.setForeground(Color.WHITE);
+        b.setFocusPainted(false);
+        b.setBorderPainted(false);
+        b.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        b.addActionListener(e -> accion.run());
+        m.add(b);
+    }
+    protected void abrir(JFrame f) { f.setVisible(true); dispose(); }
+}
