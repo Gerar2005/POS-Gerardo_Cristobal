@@ -1,4 +1,4 @@
-//Este módulo se utiliza para registrar los productos del negocio.
+//Este módulo se utiliza para registrar los pedidos hechos por los clientes.
 
 package cafe;
 import java.awt.*; import java.sql.*; import javax.swing.*; import javax.swing.table.DefaultTableModel;
