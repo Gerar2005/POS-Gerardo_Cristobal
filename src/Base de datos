@@ -1,0 +1,70 @@
+//Base de datos utilizada para almacenar los datos del sistema.
+
+MySQL:
+
+create database cafe;
+use cafe;
+
+create table cliente(
+id_cliente int primary key auto_increment,
+nombre varchar(50),
+apellido varchar(50),
+telefono varchar(20)
+);
+
+create table empleado(
+id_emp int primary key auto_increment,
+nombre varchar(50),
+apellido varchar(50),
+correo varchar(50)
+);
+
+create table producto(
+id_producto int primary key,
+nombre varchar(50),
+precio int
+);
+
+create table materia_prima(
+id_materia int primary key,
+nombre varchar(50),
+cantidad int
+);
+
+create table pedido(
+id_pedido int primary key,
+id_cliente int,
+fecha datetime,
+total int,
+foreign key(id_cliente) references cliente(id_cliente)
+);
+
+create table detalles_pedido(
+id_pedido int primary key,
+id_producto int,
+subtotal int,
+foreign key (id_pedido) references pedido (id_pedido),
+foreign key (id_producto) references producto (id_producto)
+);
+
+create table preparacion(
+id_producto int primary key,
+id_materia int,
+foreign key(id_producto) references producto (id_producto),
+foreign key(id_materia) references materia_prima (id_materia)
+);
+
+create table reabastecimiento(
+id_entrega int primary key,
+fecha datetime,
+total int
+);
+
+create table detalles_entrega(
+id_entrega int primary key,
+id_materia int,
+cantidad int,
+precio int,
+foreign key (id_entrega) references reabastecimiento (id_entrega),
+foreign key (id_materia) references materia_prima (id_materia)
+);
