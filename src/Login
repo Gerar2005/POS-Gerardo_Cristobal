@@ -1,0 +1,39 @@
+//Módulo Login. Permite que el usuario ingrese al programa
+
+package cafe;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
+public class LoginFrame extends JFrame {
+    private JTextField txtUsuario;
+    private JPasswordField txtPass;
+    public LoginFrame() {
+        setTitle("Inicio de Sesión"); setSize(900,520); setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); setLocationRelativeTo(null); setLayout(new GridLayout(1,2));
+        JPanel izq = new JPanel(new BorderLayout()); izq.setBackground(new Color(126,153,119));
+        ImageIcon icono = new ImageIcon(getClass().getResource("/imagenes/logo.png"));
+Image imagen = icono.getImage().getScaledInstance(220, 220, Image.SCALE_SMOOTH);
+
+JLabel logo = new JLabel(new ImageIcon(imagen));
+logo.setHorizontalAlignment(SwingConstants.CENTER);
+
+izq.add(logo, BorderLayout.CENTER);
+logo.setFont(new Font("Segoe UI", Font.BOLD, 42));
+logo.setForeground(Color.WHITE);
+izq.add(logo, BorderLayout.CENTER);
+        JLabel frase = new JLabel("El cierre perfecto para tu día.", SwingConstants.CENTER); frase.setForeground(Color.WHITE); frase.setFont(new Font("Segoe UI",Font.BOLD,16)); izq.add(frase,BorderLayout.SOUTH);
+        JPanel der = new JPanel(new GridBagLayout()); der.setBackground(Estilos.CREMA);
+        JPanel card = new JPanel(new GridLayout(7,1,8,8)); card.setBackground(new Color(255,250,240)); card.setBorder(new EmptyBorder(35,35,35,35));
+        JLabel titulo = new JLabel("INICIO DE SESIÓN",SwingConstants.CENTER); titulo.setFont(new Font("Segoe UI",Font.BOLD,22));
+        txtUsuario = Estilos.campo("Usuario"); txtUsuario.setText("admin");
+        txtPass = new JPasswordField("1234"); txtPass.setBorder(txtUsuario.getBorder());
+        JButton ingresar = Estilos.boton("INGRESAR",Estilos.VERDE); ingresar.addActionListener(e -> validar());
+        card.add(new JLabel("👤",SwingConstants.CENTER)); card.add(titulo); card.add(txtUsuario); card.add(txtPass); card.add(new JCheckBox("Recordarme")); card.add(ingresar); card.add(new JLabel("¿Olvidaste tu contraseña?",SwingConstants.CENTER));
+        der.add(card); add(izq); add(der);
+    }
+    private void validar() {
+        String u=txtUsuario.getText().trim(), p=String.valueOf(txtPass.getPassword()).trim();
+        if(u.equals("admin") && p.equals("1234")){ new MenuPrincipalFrame().setVisible(true); dispose(); }
+        else JOptionPane.showMessageDialog(this,"Usuario o contraseña incorrectos.");
+    }
+}
