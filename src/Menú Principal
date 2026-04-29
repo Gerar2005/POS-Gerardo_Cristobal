@@ -1,0 +1,26 @@
+//Genera el Menú que se muestra al ejecutar el módulo App
+
+package cafe;
+import java.awt.*;
+import javax.swing.*;
+
+public class MenuPrincipalFrame extends LayoutBase {
+    public MenuPrincipalFrame(){ super("Menú Principal"); construir(); }
+    private void construir(){
+        JPanel panel = new JPanel(new BorderLayout(15,15)); panel.setBackground(Estilos.CREMA); panel.add(Estilos.titulo("Menú Principal"),BorderLayout.NORTH);
+        JPanel grid = new JPanel(new GridLayout(2,3,20,20)); grid.setBackground(Estilos.CREMA);
+        grid.add(card("Clientes","Gestiona tus clientes",()->abrir(new ClientesFrame())));
+        grid.add(card("Productos","Administra tus productos",()->abrir(new ProductosFrame())));
+        grid.add(card("Materia Prima","Controla tus insumos",()->abrir(new MateriaPrimaFrame())));
+        grid.add(card("Pedidos","Realiza y consulta pedidos",()->abrir(new PedidosFrame())));
+        grid.add(card("Reabastecimiento","Registra entradas",()->abrir(new ReabastecimientoFrame())));
+        grid.add(card("Reportes","Consulta tus reportes",()->abrir(new ReportesFrame())));
+        panel.add(grid); contenido.add(panel);
+    }
+    private JPanel card(String t,String d,Runnable r){
+        JPanel c=new JPanel(new BorderLayout()); c.setBackground(new Color(255,250,240)); c.setBorder(BorderFactory.createLineBorder(new Color(220,210,190)));
+        JLabel lt=new JLabel(t,SwingConstants.CENTER); lt.setFont(new Font("Segoe UI",Font.BOLD,22));
+        JLabel ld=new JLabel(d,SwingConstants.CENTER); JButton b=Estilos.boton("Abrir",Estilos.VERDE); b.addActionListener(e->r.run());
+        c.add(ld,BorderLayout.NORTH); c.add(lt); c.add(b,BorderLayout.SOUTH); return c;
+    }
+}
