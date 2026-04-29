@@ -1,0 +1,38 @@
+//Se utiliza para definir los colores de la interfaz gráfica del programa.
+
+package cafe;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
+public class Estilos {
+    public static final Color VERDE = new Color(47,107,45);
+    public static final Color CAFE = new Color(76,48,27);
+    public static final Color CREMA = new Color(252,246,234);
+    public static final Color AMARILLO = new Color(255,193,38);
+    public static final Color ROJO = new Color(230,57,70);
+    public static final Color TEXTO = new Color(45,45,45);
+
+    public static JButton boton(String texto, Color color) {
+        JButton b = new JButton(texto);
+        b.setBackground(color);
+        b.setForeground(color.equals(AMARILLO) ? Color.BLACK : Color.WHITE);
+        b.setFocusPainted(false);
+        b.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        b.setBorder(new EmptyBorder(9,15,9,15));
+        return b;
+    }
+    public static JLabel titulo(String texto) {
+        JLabel l = new JLabel(texto);
+        l.setFont(new Font("Segoe UI", Font.BOLD, 27));
+        l.setForeground(TEXTO);
+        return l;
+    }
+    public static JTextField campo(String texto) {
+        JTextField t = new JTextField();
+        t.setToolTipText(texto);
+        t.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        t.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(215,205,188)), new EmptyBorder(8,10,8,10)));
+        return t;
+    }
+}
