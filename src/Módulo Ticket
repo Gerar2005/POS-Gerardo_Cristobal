@@ -1,0 +1,7 @@
+//Este módulo genera las facturas de las compras hechas por el cliente.
+
+package cafe;
+import java.awt.*; import javax.swing.*; import javax.swing.table.DefaultTableModel;
+public class TicketFrame extends JFrame{
+ public TicketFrame(int id,DefaultTableModel pedido,double total){setTitle("Ticket de Venta"); setSize(430,610); setLocationRelativeTo(null); setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); JTextArea t=new JTextArea(); t.setFont(new Font("Monospaced",Font.PLAIN,14)); t.setEditable(false); StringBuilder sb=new StringBuilder(); sb.append("        SUNFLOWER COFFEE BAR\n"); sb.append("================================\n"); sb.append("Ticket #").append(String.format("%05d",id)).append("\n"); sb.append("Fecha: ").append(java.time.LocalDate.now()).append("\n"); sb.append("Cliente: Público general\n"); sb.append("================================\n"); sb.append(String.format("%-16s %4s %8s\n","Producto","Cant","Sub")); sb.append("--------------------------------\n"); for(int i=0;i<pedido.getRowCount();i++){String prod=pedido.getValueAt(i,0).toString(); String cant=pedido.getValueAt(i,1).toString(); String sub=pedido.getValueAt(i,3).toString(); sb.append(String.format("%-16s %4s $%7s\n",prod.length()>15?prod.substring(0,15):prod,cant,sub));} sb.append("================================\n"); sb.append(String.format("TOTAL: $%.2f\n",total)); sb.append("\n¡Gracias por su compra!\n"); t.setText(sb.toString()); add(new JScrollPane(t));}
+}
