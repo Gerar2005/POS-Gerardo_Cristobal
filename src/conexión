@@ -1,0 +1,22 @@
+//Código para conectar la base de datos a nuestro programa en Java:
+
+package cafe;
+
+import java.sql.*;
+import javax.swing.JOptionPane;
+
+public class Conexion {
+    private static final String URL = "jdbc:mysql://localhost:3306/cafe?useSSL=false&serverTimezone=UTC";
+    private static final String USER = "root";
+    private static final String PASS = "1234";
+
+    public static Connection conectar() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            return DriverManager.getConnection(URL, USER, PASS);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al conectar con MySQL:\n" + e.getMessage());
+            return null;
+        }
+    }
+}
