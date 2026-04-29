@@ -1,0 +1,38 @@
+//Este módulo se utiliza para registrar los productos del negocio.
+
+package cafe;
+import java.awt.*; import java.sql.*; import javax.swing.*; import javax.swing.table.DefaultTableModel;
+public class PedidosFrame extends LayoutBase{
+ DefaultTableModel modelo; JTable tabla; JLabel totalLbl; double total=0;
+ public PedidosFrame(){super("Nuevo Pedido"); ui();}
+ void ui(){contenido.add(Estilos.titulo("Nuevo Pedido"),BorderLayout.NORTH); JPanel main=new JPanel(new GridLayout(1,2,20,20)); main.setBackground(Estilos.CREMA); JPanel cats=new JPanel(new GridLayout(0,1,10,10)); cats.setBackground(Estilos.CREMA); cats.setBorder(BorderFactory.createTitledBorder("Categorías")); String[][] items={{"HOT / CALIENTE +","Cappuccino","40"},{"COLD / FRÍO +","Iced Coffee","50"},{"FRAPPE +","Frappe Vainilla","85"},{"LATTE +","Latte","40"},{"ESPRESSO +","Espresso","30"}}; for(String[] it:items){JButton b=Estilos.boton(it[0],Estilos.VERDE); b.addActionListener(e->add(it[1],Double.parseDouble(it[2]))); cats.add(b);} JPanel det=new JPanel(new BorderLayout(10,10)); det.setBackground(Estilos.CREMA); det.setBorder(BorderFactory.createTitledBorder("Detalle del Pedido")); modelo=new DefaultTableModel(new String[]{"Producto","Cant.","Precio","Subtotal"},0); tabla=new JTable(modelo); det.add(new JScrollPane(tabla)); totalLbl=new JLabel("TOTAL: $0.00",SwingConstants.RIGHT); totalLbl.setFont(new Font("Segoe UI",Font.BOLD,26)); totalLbl.setForeground(Estilos.VERDE); JButton cancelar=Estilos.boton("Cancelar",Color.GRAY); cancelar.addActionListener(e->limpiar()); JButton cobrar=Estilos.boton("Cobrar",Estilos.VERDE); cobrar.addActionListener(e->cobrar(false)); JButton ticket=Estilos.boton("Generar Ticket",Estilos.CAFE); ticket.addActionListener(e->cobrar(true)); JPanel botones=new JPanel(); botones.setBackground(Estilos.CREMA); botones.add(cancelar); botones.add(cobrar); botones.add(ticket); JPanel sur=new JPanel(new BorderLayout()); sur.setBackground(Estilos.CREMA); sur.add(totalLbl,BorderLayout.NORTH); sur.add(botones,BorderLayout.SOUTH); det.add(sur,BorderLayout.SOUTH); main.add(cats); main.add(det); contenido.add(main);}
+ void add(String n,double p){double sub=p; modelo.addRow(new Object[]{n,1,p,sub}); total+=sub; totalLbl.setText(String.format("TOTAL: $%.2f",total));}
+ void limpiar(){modelo.setRowCount(0); total=0; totalLbl.setText("TOTAL: $0.00");}
+ void cobrar(boolean verTicket){if(modelo.getRowCount()==0){JOptionPane.showMessageDialog(this,"Agrega productos al pedido.");return;} int id=0; try(Connection c=Conexion.conectar()){PreparedStatement ps=c.prepareStatement("INSERT INTO pedido(id_cliente,fecha,total) VALUES(NULL,NOW(),?)",Statement.RETURN_GENERATED_KEYS); ps.setDouble(1,total); ps.executeUpdate(); ResultSet rs=ps.getGeneratedKeys(); if(rs.next()) id=rs.getInt(1); String sqlBuscarProducto = "SELECT id_producto FROM producto WHERE nombre = ? LIMIT 1";
+String sqlDetalle = "INSERT INTO detalles_pedido(id_pedido, id_producto, subtotal) VALUES(?,?,?)";
+
+PreparedStatement buscarProducto = c.prepareStatement(sqlBuscarProducto);
+PreparedStatement det = c.prepareStatement(sqlDetalle);
+
+for (int i = 0; i < modelo.getRowCount(); i++) {
+    String nombreProducto = modelo.getValueAt(i, 0).toString();
+    double subtotal = Double.parseDouble(modelo.getValueAt(i, 3).toString());
+
+    buscarProducto.setString(1, nombreProducto);
+    ResultSet rsProducto = buscarProducto.executeQuery();
+
+    if (rsProducto.next()) {
+        int idProducto = rsProducto.getInt("id_producto");
+
+        det.setInt(1, id);
+        det.setInt(2, idProducto);
+        det.setInt(3, (int) subtotal);
+        det.addBatch();
+    } else {
+        JOptionPane.showMessageDialog(this, "El producto no existe en la base de datos: " + nombreProducto);
+        return;
+    }
+}
+
+det.executeBatch(); JOptionPane.showMessageDialog(this,"Pedido cobrado correctamente."); if(verTicket)new TicketFrame(id,modelo,total).setVisible(true); limpiar();}catch(Exception e){JOptionPane.showMessageDialog(this,"Error: "+e.getMessage());}}
+}
